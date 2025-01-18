@@ -6,6 +6,7 @@ import Login from './screens/Login';
 import Registration from './screens/Registration';
 import Home from './screens/Home';
 import Calendar from './screens/Calendar';
+import Profile from './screens/Profile';
 
 const AppRoutes = () => {
   const noNav = ['/login', '/register'];
@@ -19,6 +20,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/calendar" element={<Calendar />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import {
   Box,
@@ -303,13 +304,8 @@ export default function Calendar() {
               {editMode.state ? 'MODIFICAR CITA' : 'AGENDAR CITA'}
             </Typography>
 
-            <Grid2
-              container
-              sx={{
-                gap: '2rem',
-              }}
-            >
-              <Grid2 sx={{ paddingTop: '8px' }} size={{ xs: 12, md: 5 }}>
+            <Grid2 container spacing={2}>
+              <Grid2 sx={{ paddingTop: '8px' }} size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth>
                   <InputLabel>Selecciona un doctor</InputLabel>
                   <Select
@@ -338,7 +334,7 @@ export default function Calendar() {
                   </Select>
                 </FormControl>
               </Grid2>
-              <Grid2 size={{ xs: 12, md: 5 }}>
+              <Grid2 size={{ xs: 12, md: 6 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -349,6 +345,7 @@ export default function Calendar() {
                         !state.doctor.some((d) => d.day == date.day())
                       }
                       onChange={handleDateChange}
+                      sx={{ width: '100%' }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -417,8 +414,7 @@ export default function Calendar() {
                   onClick={addEvent}
                 >
                   <Typography variant="body1" fontWeight={'bold'}>
-                    {' '}
-                    {editMode.state ? 'Modificar fecha' : 'Agendar'}{' '}
+                    {editMode.state ? 'Modificar fecha' : 'Agendar'}
                   </Typography>
                 </Button>
               )}
@@ -459,7 +455,7 @@ export default function Calendar() {
                 onClick={openWhatsApp}
               >
                 <WhatsAppIcon />
-                <Typography variant="body2">Contactar</Typography>
+                Contactar
               </Button>
             </Box>
           </Box>

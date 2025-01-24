@@ -24,6 +24,7 @@ import {
   getDoctorsAvailability,
 } from '../services/api_service';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 // Constants and helpers
 //const now = new Date();
@@ -384,16 +385,12 @@ export default function Calendar() {
               {currentSlot && (
                 <Button
                   variant="contained"
-                  sx={{
-                    height: 'fit-content',
-                    backgroundColor: '#94B754',
-                    width: '200px',
-                  }}
+                  size="large"
+                  sx={{ fontWeight: 'bold' }}
                   onClick={addEvent}
+                  endIcon={<CalendarMonthIcon />}
                 >
-                  <Typography variant="body1" fontWeight={'bold'}>
-                    {editMode.state ? 'Modificar fecha' : 'Agendar'}
-                  </Typography>
+                  {editMode.state ? 'Modificar fecha' : 'Agendar'}
                 </Button>
               )}
               {editMode.state && (
@@ -425,14 +422,11 @@ export default function Calendar() {
               </Typography>
               <Button
                 variant="contained"
-                sx={{
-                  backgroundColor: '#94B754',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                }}
+                color="primary"
+                size="medium"
+                startIcon={<WhatsAppIcon />}
                 onClick={openWhatsApp}
               >
-                <WhatsAppIcon />
                 Contactar
               </Button>
             </Box>

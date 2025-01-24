@@ -95,6 +95,7 @@ code {
 
   .nav-menu.active {
       display: flex;
+      margin-top: 0px;
   }
 
   .nav-item {

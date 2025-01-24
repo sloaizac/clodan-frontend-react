@@ -146,13 +146,12 @@ export default function Home() {
             </Box>
             <Button
               variant="contained"
+              size="large"
               color="primary"
               onClick={() => (window.location.pathname = '/pay')}
-              sx={{ height: 'fit-content', backgroundColor: '#94B754' }}
+              sx={{ fontWeight: 'bold' }}
             >
-              <Typography variant="h6" fontWeight={'bold'}>
-                Renovar Plan
-              </Typography>
+              Renovar Plan
             </Button>
           </Box>
           {/*<Typography variant="h4" gutterBottom>

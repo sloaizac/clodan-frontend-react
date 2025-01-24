@@ -7,6 +7,7 @@ import Registration from './screens/Registration';
 import Home from './screens/Home';
 import Calendar from './screens/Calendar';
 import Profile from './screens/Profile';
+import Pay from './screens/Pay';
 
 const AppRoutes = () => {
   const noNav = ['/login', '/register'];
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         <Route path="/register" element={<Registration />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/pay" element={<Pay />} />
       </Routes>
     </Router>
   );

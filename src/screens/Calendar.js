@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Checkbox,
   InputLabel,
   MenuItem,
   Select,
@@ -305,7 +304,7 @@ export default function Calendar() {
             </Typography>
 
             <Grid2 container spacing={2}>
-              <Grid2 sx={{ paddingTop: '8px' }} size={{ xs: 12, md: 6 }}>
+              <Grid2 sx={{ paddingTop: '8px' }} size={{ xs: 12, md: 4 }}>
                 <FormControl fullWidth>
                   <InputLabel>Selecciona un doctor</InputLabel>
                   <Select
@@ -328,13 +327,13 @@ export default function Calendar() {
                   >
                     {Object.keys(state.doctors).map((key, index) => (
                       <MenuItem value={key} key={index}>
-                        {key} ({state.doctors[key][0]?.speciality})
+                        {`${key} (${state.doctors[key][0]?.speciality})`}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid2>
-              <Grid2 size={{ xs: 12, md: 6 }}>
+              <Grid2 size={{ xs: 12, md: 4 }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
                     <DatePicker
@@ -350,47 +349,26 @@ export default function Calendar() {
                   </DemoContainer>
                 </LocalizationProvider>
               </Grid2>
-            </Grid2>
-
-            <Grid2 container>
-              <Grid2
-                size={{ xs: 5 }}
-                sx={{ flexDirection: 'column', gap: '1rem' }}
-              >
-                {slots.slice(0, (slots.length + 1) / 2).map((slot, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: 'flex', alignItems: 'center' }}
+              <Grid2 size={{ xs: 12, md: 4 }} sx={{ paddingTop: '8px' }}>
+                <FormControl fullWidth>
+                  <InputLabel>Selecciona una hora</InputLabel>
+                  <Select
+                    value={currentSlot?.start || 'none'}
+                    label="Selecciona una hora"
+                    onChange={(e) => {
+                      const c = slots.find(
+                        (slot) => slot.start == e.target.value
+                      );
+                      setCurrentSlot(c);
+                    }}
                   >
-                    <Checkbox
-                      checked={currentSlot?.start === slot.start}
-                      onChange={() => setCurrentSlot(slot)}
-                    />
-                    <Typography>
-                      {new Date(slot.start).toLocaleTimeString()}
-                    </Typography>
-                  </Box>
-                ))}
-              </Grid2>
-
-              <Grid2
-                size={{ xs: 5 }}
-                sx={{ flexDirection: 'column', gap: '1rem' }}
-              >
-                {slots.slice((slots.length + 1) / 2).map((slot, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                  >
-                    <Checkbox
-                      checked={currentSlot?.start === slot.start}
-                      onChange={() => setCurrentSlot(slot)}
-                    />
-                    <Typography>
-                      {new Date(slot.start).toLocaleTimeString()}
-                    </Typography>
-                  </Box>
-                ))}
+                    {slots.map((slot, index) => (
+                      <MenuItem value={slot.start} key={index}>
+                        {new Date(slot.start).toLocaleTimeString()}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid2>
             </Grid2>
 

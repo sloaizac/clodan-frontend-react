@@ -13,15 +13,22 @@ import {
   Container,
 } from '@mui/material';
 import { register, addBeneficiary } from '../services/api_service';
+import { useSearchParams } from 'react-router-dom';
 
-const Registration = ({ identification_number_titular = null }) => {
+const Registration = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, setSearchParams] = useSearchParams();
   const [state, setState] = useState({
     identification_type: 'CC',
     privacy_policy: true,
     send_notifications_email: true,
     send_notifications_whatsapp: true,
     membership: 'NO AFILIADO',
+    identification_number_titular: searchParams.get('dni'),
   });
+  const session = localStorage.getItem('session') || '{}';
+  const session_data = JSON.parse(session);
+  const [type, setType] = useState(1); // 1.TITULAR; 2.BENEFICIARIO
 
   const onChange = (key, value) => {
     setState((prevState) => ({
@@ -32,7 +39,7 @@ const Registration = ({ identification_number_titular = null }) => {
 
   const handleRegistration = async () => {
     try {
-      if (!identification_number_titular) {
+      if (!state.identification_number_titular) {
         await register(state);
         alert('Registro exitoso');
         window.location.pathname = '/login';
@@ -42,10 +49,12 @@ const Registration = ({ identification_number_titular = null }) => {
           const user_id = response.id;
           await addBeneficiary({
             user_id,
-            identification_number_titular,
+            identification_number_titular: state.identification_number_titular,
           });
           alert('Beneficiario añadido correctamente');
-          window.location.pathname = '/login';
+          if (searchParams.get('redirect_to')) {
+            window.location.pathname = '/' + searchParams.get('redirect_to');
+          }
         }
       }
     } catch (error) {
@@ -72,8 +81,30 @@ const Registration = ({ identification_number_titular = null }) => {
       />
       <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4, p: 2, borderRadius: 2 }}>
         <Typography variant="h6" textAlign="center" gutterBottom>
-          Crear una nueva cuenta
+          {searchParams.get('dni')
+            ? 'Añadir beneficiario'
+            : 'Crear una nueva cuenta'}
         </Typography>
+        {session_data.is_admin && (
+          <FormControl fullWidth margin="normal">
+            <Typography>Tipo de usuario</Typography>
+            <Select value={type} onChange={(e) => setType(e.target.value)}>
+              <MenuItem value={1}>TITULAR</MenuItem>
+              <MenuItem value={2}>BENEFICIARIO</MenuItem>
+            </Select>
+          </FormControl>
+        )}
+        {session_data.is_admin && type == 2 && (
+          <TextField
+            label="Número de Identificación del Titular"
+            fullWidth
+            margin="normal"
+            value={state.identification_number_titular}
+            onChange={(e) =>
+              onChange('identification_number_titular', e.target.value)
+            }
+          />
+        )}
         <TextField
           label="Nombre Completo"
           fullWidth
@@ -161,7 +192,7 @@ const Registration = ({ identification_number_titular = null }) => {
           sx={{ mt: 2 }}
           onClick={handleRegistration}
         >
-          Registrarse
+          Registrar
         </Button>
       </Box>
     </Container>

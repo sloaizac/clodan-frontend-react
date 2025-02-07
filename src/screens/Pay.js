@@ -20,10 +20,12 @@ import {
   CardHeader,
 } from '@mui/material';
 import { getUser, createPaymentOrder } from '../services/api_service';
+import { useAlert } from '../AlertContext';
 
 export default function Pay() {
   const [state, setState] = useState({ user: {}, loading: true });
   const session = localStorage.getItem('session') || '{}';
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const session_data = JSON.parse(session);
@@ -39,7 +41,7 @@ export default function Pay() {
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   }, []);
 

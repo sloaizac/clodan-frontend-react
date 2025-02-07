@@ -1,6 +1,7 @@
 import React from 'react';
 import AppRoutes from './routes';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AlertProvider } from './AlertContext';
 
 const theme = createTheme({
   palette: {
@@ -14,7 +15,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <AppRoutes />
+      <AlertProvider>
+        <AppRoutes />
+      </AlertProvider>
     </ThemeProvider>
   );
 }

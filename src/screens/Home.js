@@ -13,11 +13,13 @@ import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { getUserPlan } from '../services/api_service';
 import { CircularProgress } from '@mui/material';
+import { useAlert } from '../AlertContext';
 
 export default function Home() {
   const [state, setState] = useState({ loading: true });
   const [plan, setPlan] = useState({});
   const session = JSON.parse(localStorage.getItem('session'));
+  const { showAlert } = useAlert();
   const sections = [
     {
       title: '20% descuento en tratamientos dentales',
@@ -67,7 +69,7 @@ export default function Home() {
         }
       })
       .catch(() => {
-        alert('Error al procesar la acción.');
+        showAlert('Error al procesar la acción.', 'error');
       });
   }, []);
 

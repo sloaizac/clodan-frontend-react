@@ -12,9 +12,11 @@ import {
   Link,
 } from '@mui/material';
 import { login } from '../services/api_service';
+import { useAlert } from '../AlertContext';
 
 const Login = () => {
   const [state, setState] = useState({});
+  const { showAlert, setSession } = useAlert();
   const onChange = (key, value) => {
     setState((prevState) => ({
       ...prevState,
@@ -39,14 +41,27 @@ const Login = () => {
             is_admin: response.data.is_admin,
           })
         );
+        setSession({
+          token: response.token,
+          user_id: response.data.id,
+          user_name: response.data.name,
+          plan_id: response.data.plan_id,
+          identification_number: response.data.identification_number,
+          phone: response.data.phone,
+          email: response.data.email,
+          is_admin: response.data.is_admin,
+        });
         if (response.data.is_admin) {
-          window.location.pathname = '/admin/tasks';
+          window.location.pathname = '/admin-tasks';
         } else {
           window.location.pathname = '/';
         }
       }
     } catch (error) {
-      alert('error');
+      showAlert(
+        'Error durante la autenticación, revise sus credenciales',
+        'error'
+      );
     }
   };
 

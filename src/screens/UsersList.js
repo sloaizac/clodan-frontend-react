@@ -26,12 +26,14 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useAlert } from '../AlertContext';
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [membership, setMembership] = useState([]);
   const [detailsIndex, setDetailsIndex] = useState();
   const [filter, setFilter] = useState('');
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     getData();
@@ -42,7 +44,7 @@ export default function UserList() {
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   }, []);
 
@@ -54,7 +56,7 @@ export default function UserList() {
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -66,11 +68,11 @@ export default function UserList() {
       .then((response) => {
         if (response) {
           getData();
-          console.log('Configuración actualizada!', 'SUCCESS');
+          showAlert('Configuración actualizada!', 'success');
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -80,11 +82,11 @@ export default function UserList() {
       .then((response) => {
         if (response) {
           getData();
-          console.log('Configuración actualizada!', 'SUCCESS');
+          showAlert('Configuración actualizada!', 'success');
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 

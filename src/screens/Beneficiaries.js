@@ -25,6 +25,7 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import CallIcon from '@mui/icons-material/Call';
+import { useAlert } from '../AlertContext';
 
 export default function Beneficiaries() {
   const [state, setState] = useState({ loading: true, contact: '', name: '' });
@@ -32,6 +33,7 @@ export default function Beneficiaries() {
   const session = localStorage.getItem('session') || '{}';
   const [visible, setVisible] = useState(false);
   const [contentId, setContentId] = useState(0);
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     setState({ ...state, contact: '', name: '' });
@@ -48,7 +50,7 @@ export default function Beneficiaries() {
           }
         })
         .catch(() => {
-          console.log('Tuvimos un error procesando esta acción', 'ERROR');
+          showAlert('Tuvimos un error procesando esta acción', 'error');
         });
     }
   }, [contentId]);
@@ -60,10 +62,10 @@ export default function Beneficiaries() {
     sendNotification(config)
       .then(() => {
         setState({ ...state, loading: false });
-        console.log('Notificación enviada exitosamente', 'SUCCESS');
+        showAlert('Notificación enviada exitosamente', 'success');
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -104,10 +106,10 @@ export default function Beneficiaries() {
     };
     scheduleCall(body)
       .then(() => {
-        console.log('Tarea creada exitosamente', 'SUCCESS');
+        showAlert('Tarea creada exitosamente', 'success');
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -231,9 +233,12 @@ export default function Beneficiaries() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 2,
+        gap: '2rem',
       }}
     >
+      {users.length == 0 && (
+        <Typography variant="h6">No tienes beneficiarios inscritos.</Typography>
+      )}
       <List sx={{ width: '100%' }}>
         {users.map((user, index) => (
           <ListItem
@@ -256,27 +261,16 @@ export default function Beneficiaries() {
             </ListItemButton>
           </ListItem>
         ))}
-        {users.length < 3 && (
-          <ListItem
-            disablePadding
-            sx={{
-              display: 'contents',
-              flexDirection: 'column',
-              width: '100%',
-            }}
-          >
-            <ListItemButton onClick={() => setVisible(true)}>
-              <ListItemIcon>
-                <PersonAddAltIcon fontSize="large" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Añadir Beneficiario"
-                sx={{ fontWeight: 'bold' }}
-              />
-            </ListItemButton>
-          </ListItem>
-        )}
       </List>
+      {users.length < 3 && (
+        <Button
+          variant="contained"
+          onClick={() => setVisible(true)}
+          startIcon={<PersonAddAltIcon fontSize="large" />}
+        >
+          Añadir Beneficiario
+        </Button>
+      )}
       <Modal
         open={visible}
         onClose={() => {

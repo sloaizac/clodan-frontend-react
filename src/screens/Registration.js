@@ -11,9 +11,11 @@ import {
   Checkbox,
   FormControlLabel,
   Container,
+  InputLabel,
 } from '@mui/material';
 import { register, addBeneficiary } from '../services/api_service';
 import { useSearchParams } from 'react-router-dom';
+import { useAlert } from '../AlertContext';
 
 const Registration = () => {
   // eslint-disable-next-line no-unused-vars
@@ -29,6 +31,7 @@ const Registration = () => {
   const session = localStorage.getItem('session') || '{}';
   const session_data = JSON.parse(session);
   const [type, setType] = useState(1); // 1.TITULAR; 2.BENEFICIARIO
+  const { showAlert } = useAlert();
 
   const onChange = (key, value) => {
     setState((prevState) => ({
@@ -41,7 +44,7 @@ const Registration = () => {
     try {
       if (!state.identification_number_titular) {
         await register(state);
-        alert('Registro exitoso');
+        showAlert('Registro exitoso', 'success');
         window.location.pathname = '/login';
       } else {
         const response = await register({ ...state, beneficiary_user: true });
@@ -51,14 +54,14 @@ const Registration = () => {
             user_id,
             identification_number_titular: state.identification_number_titular,
           });
-          alert('Beneficiario añadido correctamente');
+          showAlert('Beneficiario añadido correctamente', 'success');
           if (searchParams.get('redirect_to')) {
             window.location.pathname = '/' + searchParams.get('redirect_to');
           }
         }
       }
     } catch (error) {
-      console.error('Error in registration:', error);
+      showAlert('Error durante el registro', 'error');
     }
   };
 
@@ -87,8 +90,12 @@ const Registration = () => {
         </Typography>
         {session_data.is_admin && (
           <FormControl fullWidth margin="normal">
-            <Typography>Tipo de usuario</Typography>
-            <Select value={type} onChange={(e) => setType(e.target.value)}>
+            <InputLabel>Tipo de usuario</InputLabel>
+            <Select
+              value={type}
+              label="Tipo de usuario"
+              onChange={(e) => setType(e.target.value)}
+            >
               <MenuItem value={1}>TITULAR</MenuItem>
               <MenuItem value={2}>BENEFICIARIO</MenuItem>
             </Select>

@@ -25,6 +25,7 @@ import {
 } from '../services/api_service';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { useAlert } from '../AlertContext';
 
 // Constants and helpers
 //const now = new Date();
@@ -69,6 +70,7 @@ export default function Calendar() {
   const session = localStorage.getItem('session');
   const user = JSON.parse(session);
   const [date, setDate] = useState(null);
+  const { showAlert } = useAlert();
 
   const handleDateChange = (newDate) => {
     setDate(newDate);
@@ -110,7 +112,7 @@ export default function Calendar() {
         }
       })
       .catch(() => {
-        console.log('Error fetching doctor availability', 'ERROR');
+        showAlert('Error fetching doctor availability', 'error');
       });
   }, []);
 
@@ -131,12 +133,12 @@ export default function Calendar() {
               }
             })
             .catch(() => {
-              console.log('Tuvimos un error procesando esta acción', 'ERROR');
+              showAlert('Tuvimos un error procesando esta acción', 'error');
             });
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -215,11 +217,11 @@ export default function Calendar() {
       : createEvent(newEvent);
     eventPromise
       .then(() => {
-        console.log(
+        showAlert(
           editMode.state
             ? 'Cita reagendada exitosamente'
             : 'Cita agendada exitosamente',
-          'SUCCESS'
+          'success'
         );
         setState((prevState) => ({ ...prevState, loading: false }));
         setEditMode({ state: false, id: null });
@@ -230,7 +232,7 @@ export default function Calendar() {
         );
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 

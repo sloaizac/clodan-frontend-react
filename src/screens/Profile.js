@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { getUser, updateUser, updateUserPwd } from '../services/api_service';
+import { useAlert } from '../AlertContext';
 
 export default function Profile() {
   const [user, setUser] = useState({});
@@ -18,6 +19,7 @@ export default function Profile() {
   const session_data = JSON.parse(session);
   const [editable, setEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     getUserData();
@@ -32,7 +34,7 @@ export default function Profile() {
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -53,7 +55,7 @@ export default function Profile() {
         }
       })
       .catch(() => {
-        console.log('Tuvimos un error procesando esta acción', 'ERROR');
+        showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
 
@@ -67,10 +69,10 @@ export default function Profile() {
               setState({ loading: false });
               setPasswordEditable(false);
             }
-            console.log('Contraseña actualizada!', 'SUCCESS');
+            showAlert('Contraseña actualizada!', 'success');
           })
           .catch(() => {
-            console.log('Tuvimos un error procesando esta acción', 'ERROR');
+            showAlert('Tuvimos un error procesando esta acción', 'error');
           });
       }
     }

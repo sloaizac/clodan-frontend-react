@@ -67,6 +67,10 @@ export default function Calendar() {
   });
   const [appointments, setAppointments] = useState([]);
   const [editMode, setEditMode] = useState({ state: false, id: null });
+  const [stateLoading, setStateLoading] = useState({
+    schedules: false,
+    doctors: false,
+  });
   const session = localStorage.getItem('session');
   const user = JSON.parse(session);
   const [date, setDate] = useState(null);
@@ -100,28 +104,12 @@ export default function Calendar() {
     }
   }, [date]);
 
-  useEffect(() => {
-    getDoctorsAvailability()
-      .then((response) => {
-        if (response && response.result) {
-          setState((prevState) => ({
-            ...prevState,
-            loading: false,
-            doctors: response.result,
-          }));
-        }
-      })
-      .catch(() => {
-        showAlert('Error fetching doctor availability', 'error');
-      });
-  }, []);
-
   const fetchEvents = () => {
     listEvents()
       .then((response) => {
         if (response) {
           setEvents(response);
-
+          setStateLoading({ schedules: true, doctors: true });
           getDoctorsAvailability()
             .then((response) => {
               if (response && response.result) {
@@ -130,6 +118,7 @@ export default function Calendar() {
                   loading: false,
                   doctors: Object.groupBy(response.result, ({ name }) => name),
                 });
+                setStateLoading({ schedules: false, doctors: false });
               }
             })
             .catch(() => {
@@ -244,6 +233,18 @@ export default function Calendar() {
     window.open(url, '_blank');
   };
 
+  function formatScheduleDate(date) {
+    return new Intl.DateTimeFormat('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(date);
+  }
+
   return (
     <Container
       maxWidth="lg"
@@ -271,7 +272,9 @@ export default function Calendar() {
             <Typography variant="h6" color="#3B535E" fontWeight={'bold'}>
               MIS CITAS
             </Typography>
-            {appointments.length > 0 ? (
+            {stateLoading.schedules ? (
+              <CircularProgress />
+            ) : appointments.length > 0 ? (
               appointments.map((a, index) => (
                 <Box
                   key={index}
@@ -279,16 +282,19 @@ export default function Calendar() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     borderBottom: 1,
-                    paddingY: 2,
+                    borderColor: '#d3d3d3',
+                    paddingY: 1,
                   }}
                 >
-                  <Typography>{new Date(a.start).toLocaleString()}</Typography>
-                  <Button
+                  <Typography>
+                    {formatScheduleDate(new Date(a.start))}
+                  </Typography>
+                  {/*<Button
                     variant="text"
                     onClick={() => setEditMode({ state: true, id: a.id })}
                   >
                     Cambiar fecha
-                  </Button>
+                  </Button>*/}
                 </Box>
               ))
             ) : (
@@ -328,11 +334,15 @@ export default function Calendar() {
                       setDate(null);
                     }}
                   >
-                    {Object.keys(state.doctors).map((key, index) => (
-                      <MenuItem value={key} key={index}>
-                        {`${key} (${state.doctors[key][0]?.speciality})`}
-                      </MenuItem>
-                    ))}
+                    {stateLoading.doctors ? (
+                      <CircularProgress />
+                    ) : (
+                      Object.keys(state.doctors).map((key, index) => (
+                        <MenuItem value={key} key={index}>
+                          {`${key} (${state.doctors[key][0]?.speciality})`}
+                        </MenuItem>
+                      ))
+                    )}
                   </Select>
                 </FormControl>
               </Grid2>

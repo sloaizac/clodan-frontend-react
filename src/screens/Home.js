@@ -36,7 +36,7 @@ export default function Home() {
       description:
         'Los miembros del plan disfrutarán de una profilaxis totalmente gratis.',
       icon: <CardGiftcardIcon fontSize="large" htmlColor="black" />,
-      action: () => (window.location.pathname = '/schedule'),
+      action: () => (window.location.pathname = '/calendar'),
       buttonText: 'Agenda tu cita',
       imgsrc: `${window.location.origin}/profree.jpg`,
     },

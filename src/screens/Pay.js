@@ -22,7 +22,8 @@ import {
 import { getUser, createPaymentOrder } from '../services/api_service';
 import { useAlert } from '../AlertContext';
 
-export default function Pay() {
+// eslint-disable-next-line react/prop-types
+export default function Pay({ pending, failed, success }) {
   const [state, setState] = useState({ user: {}, loading: true });
   const session = localStorage.getItem('session') || '{}';
   const { showAlert } = useAlert();
@@ -78,62 +79,122 @@ export default function Pay() {
         <Card variant="outlined">
           <CardHeader
             title="PLAN DE AFILIADOS CLODAN"
-            sx={{ textAlign: 'center' }}
+            sx={{ textAlign: 'center', fontWeight: 'bold' }}
           />
           <CardContent>
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <DiscountIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="20% descuento en tratamientos dentales." />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <EmojiEmotionsIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Profilaxis totalmente gratis cada 6 meses." />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <MedicalServicesIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Atención de emergencia en menos de 24 horas." />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <GroupAddIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="3 beneficiarios de su plan para disfutar de los mismos beneficios." />
-              </ListItem>
-            </List>
+            {success && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" color="primary" gutterBottom>
+                  APROBADO
+                </Typography>
+                <Typography variant="h5">
+                  Hemos recibido tu pago con exito.
+                </Typography>
+              </Box>
+            )}
+            {failed && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" color="primary" gutterBottom>
+                  RECHAZADO
+                </Typography>
+                <Typography variant="h5">
+                  No hemos podido procesar tu pago correctamente.
+                </Typography>
+              </Box>
+            )}
+            {pending && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                }}
+              >
+                <Typography variant="h4" color="primary" gutterBottom>
+                  PENDIENTE
+                </Typography>
+                <Typography variant="h5">
+                  En este momento estamos procesando tu pago.
+                </Typography>
+              </Box>
+            )}
+            {!pending && !failed && !success && (
+              <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <DiscountIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="20% descuento en tratamientos dentales." />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <EmojiEmotionsIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Profilaxis totalmente gratis cada 6 meses." />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <MedicalServicesIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Atención de emergencia en menos de 24 horas." />
+                </ListItem>
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <GroupAddIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="3 beneficiarios de su plan para disfutar de los mismos beneficios." />
+                </ListItem>
+              </List>
+            )}
 
-            <Typography variant="body1" textAlign="center" gutterBottom>
-              Al renovar tu plan conservaras los meses restantes de tu membresía
-              actual
-            </Typography>
-            <Typography
-              variant="h5"
-              fontWeight={'bold'}
-              textAlign="center"
-              sx={{ mt: '2rem', mb: '2rem' }}
-            >
-              {`Precio anual ${getCurrecyFormat()}`}
-            </Typography>
+            {!pending && !failed && !success && (
+              <>
+                <Typography variant="body1" textAlign="center" gutterBottom>
+                  Al renovar tu plan conservaras los meses restantes de tu
+                  membresía actual
+                </Typography>
+                <Typography
+                  variant="h5"
+                  fontWeight={'bold'}
+                  textAlign="center"
+                  sx={{ mt: '2rem', mb: '2rem' }}
+                >
+                  {`Precio anual ${getCurrecyFormat()}`}
+                </Typography>
+              </>
+            )}
           </CardContent>
-          <CardActions>
-            <Button variant="contained" fullWidth onClick={() => createOrder()}>
-              Pagar
-            </Button>
-          </CardActions>
+          {!pending && !failed && !success && (
+            <CardActions>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={() => createOrder()}
+              >
+                Pagar
+              </Button>
+            </CardActions>
+          )}
         </Card>
       </Box>
     </Container>

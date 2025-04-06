@@ -53,6 +53,8 @@ const Registration = () => {
           await addBeneficiary({
             user_id,
             identification_number_titular: state.identification_number_titular,
+            phone: state.phone,
+            email: state.email,
           });
           showAlert('Beneficiario añadido correctamente', 'success');
           if (searchParams.get('redirect_to')) {

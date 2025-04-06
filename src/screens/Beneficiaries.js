@@ -19,6 +19,7 @@ import {
   getBeneficiaries,
   sendNotification,
   scheduleCall,
+  getUserPlan,
 } from '../services/api_service';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
@@ -31,6 +32,7 @@ import { useAlert } from '../AlertContext';
 export default function Beneficiaries() {
   const [state, setState] = useState({ loading: true, contact: '', name: '' });
   const [users, setUsers] = useState([]);
+  const [plan, setPlan] = useState({});
   const session = localStorage.getItem('session') || '{}';
   const [visible, setVisible] = useState(false);
   const [contentId, setContentId] = useState(0);
@@ -56,6 +58,19 @@ export default function Beneficiaries() {
     }
   }, [contentId]);
 
+  useEffect(() => {
+    getUserPlan(JSON.parse(session)?.user_id)
+      .then((response) => {
+        if (response && response.result) {
+          setPlan(response.result[0]);
+          setState({ ...state, loading: false });
+        }
+      })
+      .catch(() => {
+        showAlert('Error al procesar la acción.', 'error');
+      });
+  }, []);
+
   const send = async (config) => {
     setState({ ...state, loading: true });
     setContentId(0);
@@ -78,7 +93,7 @@ export default function Beneficiaries() {
       type: 'invitacion_beneficiario',
       username: session_data.user_name,
       // eslint-disable-next-line no-undef
-      link: `${process.env.EXPO_PUBLIC_HOST}/registration/${session_data.user_id}`,
+      link: `${process.env.REACT_APP_PUBLIC_HOST}/registration/${session_data.user_id}`,
     };
     send(config);
   };
@@ -91,7 +106,7 @@ export default function Beneficiaries() {
       type: 'invitacion_beneficiario',
       username: session_data.user_name,
       // eslint-disable-next-line no-undef
-      link: `${process.env.EXPO_PUBLIC_HOST}/registration/${session_data.user_id}`,
+      link: `${process.env.REACT_APP_PUBLIC_HOST}/registration/${session_data.user_id}`,
     };
     send(config);
   };
@@ -237,39 +252,56 @@ export default function Beneficiaries() {
         gap: '2rem',
       }}
     >
-      {users.length == 0 && (
-        <Typography variant="h6">No tienes beneficiarios inscritos.</Typography>
-      )}
-      <List sx={{ width: '100%' }}>
-        {users.map((user, index) => (
-          <ListItem
-            disablePadding
-            key={index}
-            sx={{
-              display: 'contents',
-              flexDirection: 'column',
-              width: '100%',
-            }}
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <AccountCircleIcon fontSize="large" />
-              </ListItemIcon>
-              <ListItemText
-                primary={user.name}
-                secondary={`CC ${user.identification_number}`}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      {users.length < 3 && (
+      {plan.description?.toUpperCase() != 'NO AFILIADO' ? (
+        <>
+          {users.length == 0 ? (
+            <Typography variant="h6">
+              No tienes beneficiarios inscritos.
+            </Typography>
+          ) : (
+            <List sx={{ width: '100%' }}>
+              {users.map((user, index) => (
+                <ListItem
+                  disablePadding
+                  key={index}
+                  sx={{
+                    display: 'contents',
+                    flexDirection: 'column',
+                    width: '100%',
+                  }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AccountCircleIcon fontSize="large" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={user.name}
+                      secondary={`CC ${user.identification_number}`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          )}
+          {users.length < 3 && (
+            <Button
+              variant="contained"
+              onClick={() => setVisible(true)}
+              startIcon={<PersonAddAltIcon fontSize="large" />}
+            >
+              Añadir Beneficiario
+            </Button>
+          )}{' '}
+        </>
+      ) : (
         <Button
           variant="contained"
-          onClick={() => setVisible(true)}
-          startIcon={<PersonAddAltIcon fontSize="large" />}
+          size="large"
+          color="primary"
+          onClick={() => (window.location.pathname = '/pay')}
+          sx={{ fontWeight: 'bold' }}
         >
-          Añadir Beneficiario
+          Renovar Plan
         </Button>
       )}
       <Modal

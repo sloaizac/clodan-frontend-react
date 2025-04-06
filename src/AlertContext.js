@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from 'react';
-import Alert from '@mui/material/Alert';
 
 const AlertContext = createContext();
 
@@ -20,15 +19,10 @@ export const AlertProvider = ({ children }) => {
   };
 
   return (
-    <AlertContext.Provider value={{ showAlert, logout, session, setSession }}>
-      <div className="relative">
-        {children}
-        {alert && (
-          <Alert sx={{ mb: 5, mt: 2 }} severity={alert.type || 'info'}>
-            {alert.message}
-          </Alert>
-        )}
-      </div>
+    <AlertContext.Provider
+      value={{ showAlert, logout, session, setSession, alert }}
+    >
+      <div>{children}</div>
     </AlertContext.Provider>
   );
 };

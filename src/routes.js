@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 /*import Home from './pages/Home';*/
@@ -32,7 +33,7 @@ const AppRoutes = () => {
   const { alert } = useAlert();
 
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       {!noNav.some((item) => window.location.pathname.startsWith(item)) && (
         <Navbar is_admin={session && session_data.is_admin} />
       )}

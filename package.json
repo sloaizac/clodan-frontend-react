@@ -1,6 +1,7 @@
 {
   "name": "clodan-frontend-react",
   "version": "0.1.0",
+  "homepage": "https://sloaizac.github.io/clodan-frontend-react/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -12,6 +13,7 @@
     "@mui/x-date-pickers-pro": "^7.23.6",
     "cra-template": "1.2.0",
     "dayjs": "^1.11.13",
+    "gh-pages": "^6.3.0",
     "material-icons": "^1.13.12",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,11 +21,13 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+},
   "eslintConfig": {
     "extends": [
       "react-app",

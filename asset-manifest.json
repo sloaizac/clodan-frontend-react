@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/clodan-frontend-react/static/css/main.ed8cedef.css",
+    "main.js": "/clodan-frontend-react/static/js/main.42761dec.js",
+    "index.html": "/clodan-frontend-react/index.html",
+    "main.ed8cedef.css.map": "/clodan-frontend-react/static/css/main.ed8cedef.css.map",
+    "main.42761dec.js.map": "/clodan-frontend-react/static/js/main.42761dec.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ed8cedef.css",
+    "static/js/main.42761dec.js"
+  ]
+}

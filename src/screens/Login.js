@@ -83,10 +83,10 @@ const Login = () => {
         style={{ width: 200 }}
       />
       <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4, p: 2, borderRadius: 2 }}>
-        <Typography variant="h6" textAlign="center" gutterBottom>
+        <Typography variant="h5" textAlign="center" fontWeight="bold">
           Iniciar sesión
         </Typography>
-        <FormControl fullWidth sx={{ mb: 2 }}>
+        <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
           <InputLabel>Tipo de Identificación</InputLabel>
           <Select
             value={state.identification_type || ''}
@@ -125,10 +125,10 @@ const Login = () => {
         >
           Iniciar Sesión
         </Button>
-        <Typography variant="body2" textAlign="center" sx={{ mt: 2 }}>
-          ¿No tienes una cuenta?{' '}
-          <Link href="/register" underline="hover">
-            Registrarme
+        <Typography variant="body1" textAlign="center" sx={{ mt: 2 }}>
+          ¿No tienes una cuenta?
+          <Link href="/register" underline="hover" sx={{ fontWeight: 'bold' }}>
+            {` Registrarme`}
           </Link>
         </Typography>
       </Box>

@@ -11,6 +11,7 @@ import {
   Container,
   Grid2,
   FormControl,
+  duration,
 } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -22,6 +23,7 @@ import {
   createEvent,
   putEvent,
   getDoctorsAvailability,
+  createEventSync,
 } from '../services/api_service';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -86,7 +88,9 @@ export default function Calendar() {
 
   useEffect(() => {
     setAppointments(
-      events.filter((e) => e.description.includes(user.identification_number))
+      events.filter((e) =>
+        e.description.includes(`CC: ${user.identification_number}`)
+      )
     );
   }, [events]);
 
@@ -105,11 +109,11 @@ export default function Calendar() {
   }, [date]);
 
   const fetchEvents = () => {
+    setStateLoading({ schedules: true, doctors: true });
     listEvents()
       .then((response) => {
         if (response) {
           setEvents(response);
-          setStateLoading({ schedules: true, doctors: true });
           getDoctorsAvailability()
             .then((response) => {
               if (response && response.result) {
@@ -118,7 +122,6 @@ export default function Calendar() {
                   loading: false,
                   doctors: Object.groupBy(response.result, ({ name }) => name),
                 });
-                setStateLoading({ schedules: false, doctors: false });
               }
             })
             .catch(() => {
@@ -128,7 +131,8 @@ export default function Calendar() {
       })
       .catch(() => {
         showAlert('Tuvimos un error procesando esta acción', 'error');
-      });
+      })
+      .finally(() => setStateLoading({ schedules: false, doctors: false }));
   };
 
   /*useEffect(() => {
@@ -195,7 +199,7 @@ export default function Calendar() {
       calendar_id: state.calendar?.id,
       event_id: editMode.state ? editMode.id : null,
       summary: user?.user_name?.toUpperCase(),
-      description: `Tel: ${user?.phone}, Email: ${user?.email}, CC: ${user?.identification_number}`,
+      description: `Tel: ${user?.phone}, Email: ${user?.email}, CC: ${user?.identification_number}, Doctor: ${state.doctor[0].name}`,
       start: { dateTime: currentSlot.start, timeZone: 'America/Bogota' },
       end: { dateTime: currentSlot.end, timeZone: 'America/Bogota' },
     };
@@ -212,13 +216,33 @@ export default function Calendar() {
             : 'Cita agendada exitosamente',
           'success'
         );
+        const unidad =
+          calendarList.findIndex((c) => c.id == state.calendar?.id) + 1;
+        const date = new Date(currentSlot.start);
+        const formattedDate = date.toISOString().split('T')[0]; // 'YYYY-MM-DD' format
+        const formattedTime = date
+          .toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+          })
+          .toLowerCase(); // e.g., '11:00:00 a.m.
+        createEventSync({
+          silla: unidad,
+          fecha: formattedDate,
+          hora: formattedTime,
+          nombre: user?.user_name?.toUpperCase(),
+          cedula: user?.identification_number,
+          duracion: duration,
+          doctor: state.doctor[0].name,
+          celular: user?.phone,
+          fechasuceso: new Date(),
+          asunto: '',
+        });
         setState((prevState) => ({ ...prevState, loading: false }));
         setEditMode({ state: false, id: null });
-        setAppointments(
-          events.filter((e) =>
-            e.description.includes(user.identification_number)
-          )
-        );
+        fetchEvents();
       })
       .catch(() => {
         showAlert('Tuvimos un error procesando esta acción', 'error');
@@ -335,7 +359,9 @@ export default function Calendar() {
                     }}
                   >
                     {stateLoading.doctors ? (
-                      <CircularProgress />
+                      <Box sx={{ justifyContent: 'center', display: 'flex' }}>
+                        <CircularProgress />
+                      </Box>
                     ) : (
                       Object.keys(state.doctors).map((key, index) => (
                         <MenuItem value={key} key={index}>

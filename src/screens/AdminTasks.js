@@ -58,7 +58,7 @@ export default function AdminTasks() {
         gap: '2rem',
       }}
     >
-      <Typography variant="h5" fontWeight={'bold'} sx={{ textAlign: 'center' }}>
+      <Typography variant="h4" fontWeight={'bold'} sx={{ textAlign: 'center' }}>
         Tareas
       </Typography>
       {tasks.map((t, index) => (

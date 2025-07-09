@@ -29,16 +29,16 @@ export default function Home() {
       icon: <LocalOfferIcon fontSize="large" htmlColor="black" />,
       action: () => openWhatsApp('tratamientos'),
       buttonText: 'Quiero más información',
-      imgsrc: `${window.location.origin}/20desc.jpg`,
+      imgsrc: `${window.location.origin}/tratamiento.png`,
     },
     {
-      title: 'Profilaxis totalmente gratis',
+      title: 'Higiene oral completa totalmente gratis',
       description:
-        'Los miembros del plan disfrutarán de una profilaxis totalmente gratis.',
+        'Los miembros del plan disfrutarán de una higiene oral completa totalmente gratis.',
       icon: <CardGiftcardIcon fontSize="large" htmlColor="black" />,
       action: () => (window.location.pathname = '/calendar'),
       buttonText: 'Agenda tu cita',
-      imgsrc: `${window.location.origin}/profree.jpg`,
+      imgsrc: `${window.location.origin}/descuento.png`,
     },
     {
       title: 'Atención de emergencia en menos de 24 horas',
@@ -47,7 +47,7 @@ export default function Home() {
       icon: <MedicalServicesIcon fontSize="large" htmlColor="black" />,
       action: () => openWhatsApp('agenda'),
       buttonText: 'Solicita tu cita',
-      imgsrc: `${window.location.origin}/emergency.jpg`,
+      imgsrc: `${window.location.origin}/emergencia.png`,
     },
     {
       title:
@@ -57,7 +57,7 @@ export default function Home() {
       icon: <GroupsIcon fontSize="large" htmlColor="black" />,
       action: () => (window.location.pathname = '/beneficiaries'),
       buttonText: 'Añadir beneficiarios',
-      imgsrc: `${window.location.origin}/beneficiaries.jpg`,
+      imgsrc: `${window.location.origin}/beneficiarios.png`,
     },
   ];
 
@@ -143,7 +143,7 @@ export default function Home() {
               </Typography>
               {plan.description?.toUpperCase() != 'NO AFILIADO' && (
                 <Typography variant="h6" color="#3B535E">
-                  Termina el {getFinalDate(plan.create_at)}
+                  Renueva el {getFinalDate(plan.create_at)}
                 </Typography>
               )}
             </Box>
@@ -215,7 +215,7 @@ export default function Home() {
                         fontWeight={'bold'}
                         color="#3B535E"
                       >
-                        {benefit.title.toLocaleUpperCase()}
+                        {benefit.title}
                       </Typography>
                     </Box>
                     <Typography

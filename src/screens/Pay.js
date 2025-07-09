@@ -146,7 +146,7 @@ export default function Pay({ pending, failed, success }) {
                       <EmojiEmotionsIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary="Profilaxis totalmente gratis cada 6 meses." />
+                  <ListItemText primary="Higiene oral completa totalmente gratis." />
                 </ListItem>
                 <ListItem>
                   <ListItemAvatar>

@@ -62,8 +62,13 @@ export default function PQRSForm() {
         alt="Logo"
         style={{ width: 200 }}
       />
-      <Box sx={{ width: '100%', mx: 'auto', mt: 4, p: 2, borderRadius: 2 }}>
-        <Typography variant="h6" textAlign="center" gutterBottom>
+      <Box sx={{ width: '100%', mx: 'auto', mt: 4, borderRadius: 2 }}>
+        <Typography
+          variant="h5"
+          fontWeight={'bold'}
+          textAlign="center"
+          gutterBottom
+        >
           Crear nueva PQRSDF
         </Typography>
         <FormControl fullWidth margin="normal">

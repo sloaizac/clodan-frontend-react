@@ -122,6 +122,7 @@ export default function Beneficiaries() {
     };
     scheduleCall(body)
       .then(() => {
+        setVisible(false);
         showAlert('Tarea creada exitosamente', 'success');
       })
       .catch(() => {
@@ -175,12 +176,12 @@ export default function Beneficiaries() {
             <TextField
               label="Nombre Completo"
               fullWidth
-              value={state.contact}
+              value={state.name}
               onChange={(e) => setState({ ...state, name: e.target.value })}
-              sx={{ mb: 1 }}
+              sx={{ mb: '1rem' }}
             />
             <TextField
-              label="Numero de Telefono"
+              label="Numero de Teléfono"
               fullWidth
               value={state.contact}
               onChange={(e) => setState({ ...state, contact: e.target.value })}
@@ -270,15 +271,15 @@ export default function Beneficiaries() {
                     width: '100%',
                   }}
                 >
-                  <ListItemButton>
+                  <ListItem>
                     <ListItemIcon>
-                      <AccountCircleIcon fontSize="large" />
+                      <AccountCircleIcon sx={{ fontSize: '3rem' }} />
                     </ListItemIcon>
                     <ListItemText
                       primary={user.name}
                       secondary={`CC ${user.identification_number}`}
                     />
-                  </ListItemButton>
+                  </ListItem>
                 </ListItem>
               ))}
             </List>

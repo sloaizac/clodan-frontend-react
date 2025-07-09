@@ -5,6 +5,7 @@ import {
   getUsers,
   updatePlan,
   updateUser,
+  listEvents,
 } from '../services/api_service';
 import {
   Container,
@@ -24,16 +25,30 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAlert } from '../AlertContext';
+
+function formatScheduleDate(date) {
+  return new Intl.DateTimeFormat('es-ES', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(date);
+}
 
 export default function UserList() {
   const [users, setUsers] = useState([]);
   const [membership, setMembership] = useState([]);
   const [detailsIndex, setDetailsIndex] = useState();
   const [filter, setFilter] = useState('');
+  const [events, setEvents] = useState([]);
   const { showAlert } = useAlert();
 
   useEffect(() => {
@@ -49,17 +64,44 @@ export default function UserList() {
       });
   }, []);
 
-  const getData = () => {
-    getUsers()
+  const fetchEvents = () => {
+    listEvents()
       .then((response) => {
-        if (response && response.result) {
-          setUsers(response.result);
+        if (response) {
+          setEvents(response);
         }
       })
       .catch(() => {
         showAlert('Tuvimos un error procesando esta acción', 'error');
       });
   };
+
+  const getData = () => {
+    getUsers()
+      .then((response) => {
+        if (response && response.result) {
+          setUsers(response.result);
+          fetchEvents();
+        }
+      })
+      .catch(() => {
+        showAlert('Tuvimos un error procesando esta acción', 'error');
+      });
+  };
+
+  useEffect(() => {
+    if (users && users.length > 0) {
+      const us = users.map((u) => {
+        return {
+          ...u,
+          appointments: events.filter((e) =>
+            e.description.includes(`CC: ${u.identification_number}`)
+          ),
+        };
+      });
+      setUsers([...us]);
+    }
+  }, [events]);
 
   const update = (email_notifications, whatsapp_notifications) => {
     const user = users[detailsIndex];
@@ -106,7 +148,6 @@ export default function UserList() {
       <Paper
         component="form"
         sx={{
-          p: '2px 4px',
           display: 'flex',
           alignItems: 'center',
           width: '100%',
@@ -116,7 +157,7 @@ export default function UserList() {
           sx={{ ml: 1, flex: 1 }}
           placeholder="Buscar usuarios"
           onChange={(e) => setFilter(e.target.value)}
-          inputProps={{ 'aria-label': 'sebuscar usuarios' }}
+          inputProps={{ 'aria-label': 'buscar usuarios' }}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
           <SearchIcon />
@@ -124,10 +165,9 @@ export default function UserList() {
       </Paper>
       <List sx={{ width: '100%' }}>
         {users
-          .filter((u) => u.name.toUpperCase().startsWith(filter.toUpperCase()))
+          .filter((u) => u.name.toUpperCase().includes(filter.toUpperCase()))
           .map((user, index) => (
             <ListItem
-              disablePadding
               key={index}
               sx={{
                 display: 'contents',
@@ -141,9 +181,10 @@ export default function UserList() {
                     ? setDetailsIndex(null)
                     : setDetailsIndex(index);
                 }}
+                sx={{ pr: '0px', pl: '0px' }}
               >
                 <ListItemIcon>
-                  <AccountCircleIcon fontSize="large" />
+                  <AccountCircleIcon sx={{ fontSize: '3rem' }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={user.name}
@@ -153,7 +194,6 @@ export default function UserList() {
               <Collapse
                 in={detailsIndex === index}
                 timeout="auto"
-                sx={{ mt: '2rem', mb: '2rem' }}
                 unmountOnExit
               >
                 <FormGroup>
@@ -185,7 +225,36 @@ export default function UserList() {
                     }
                     label="Enviar mensajes de confirmación por Correo electronico"
                   />
-                  <FormControl fullWidth sx={{ mt: '1rem' }}>
+                  <FormControl fullWidth sx={{ mt: '2rem' }}>
+                    <Typography variant="body1" fontWeight={'bold'}>
+                      Citas Programadas
+                    </Typography>
+                    <List>
+                      {user.appointments?.length > 0 ? (
+                        user.appointments?.map((a, index) => (
+                          <ListItem
+                            key={index}
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              borderBottom: 1,
+                              borderColor: '#d3d3d3',
+                              paddingY: 1,
+                            }}
+                          >
+                            <ListItemText>
+                              {formatScheduleDate(new Date(a.start))}
+                            </ListItemText>
+                          </ListItem>
+                        ))
+                      ) : (
+                        <Typography variant="body1">
+                          Este usuario no tiene citas.
+                        </Typography>
+                      )}
+                    </List>
+                  </FormControl>
+                  <FormControl fullWidth sx={{ mt: '2rem', mb: '2rem' }}>
                     <InputLabel>Plan de afiliación</InputLabel>
                     <Select
                       value={user.membership_id}

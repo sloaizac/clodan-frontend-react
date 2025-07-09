@@ -131,6 +131,15 @@ export async function createEvent(event) {
   return await handleResponse(response);
 }
 
+export async function createEventSync(event) {
+  const response = await fetch(`${API_URL}/event-sync`, {
+    method: 'POST',
+    headers: await getHeaders(),
+    body: JSON.stringify(event),
+  });
+  return await handleResponse(response);
+}
+
 export async function putEvent(event) {
   const response = await fetch(`${API_URL}/event`, {
     method: 'PUT',

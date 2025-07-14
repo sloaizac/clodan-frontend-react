@@ -132,7 +132,9 @@ export default function Calendar() {
       .catch(() => {
         showAlert('Tuvimos un error procesando esta acción', 'error');
       })
-      .finally(() => setStateLoading({ schedules: false, doctors: false }));
+      .finally(() => {
+        setStateLoading({ schedules: false, doctors: false });
+      });
   };
 
   /*useEffect(() => {
@@ -246,6 +248,9 @@ export default function Calendar() {
       })
       .catch(() => {
         showAlert('Tuvimos un error procesando esta acción', 'error');
+      })
+      .finally(() => {
+        setState((prevState) => ({ ...prevState, loading: false }));
       });
   };
 

@@ -5,10 +5,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './screens/Login';
 import Registration from './screens/Registration';
-import Home from './screens/Home';
+import Home from './screens/Home2';
 import Calendar from './screens/Calendar';
 import Profile from './screens/Profile';
-import Pay from './screens/Pay';
+import Pay from './screens/Pay2';
 import UserList from './screens/UsersList';
 import Beneficiaries from './screens/Beneficiaries';
 import AdminTasks from './screens/AdminTasks';
@@ -33,7 +33,7 @@ const AppRoutes = () => {
   const { alert } = useAlert();
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename={'/'}>
       {!noNav.some((item) => window.location.pathname.startsWith(item)) && (
         <Navbar is_admin={session && session_data.is_admin} />
       )}

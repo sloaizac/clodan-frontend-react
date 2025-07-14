@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { getUser, updateUser, updateUserPwd } from '../services/api_service';
 import { useAlert } from '../AlertContext';
+import PersonIcon from '@mui/icons-material/Person';
 
 export default function Profile() {
   const [user, setUser] = useState({});
@@ -98,6 +99,7 @@ export default function Profile() {
     return color;
   }
 
+  // eslint-disable-next-line no-unused-vars
   function stringAvatar(name) {
     return {
       sx: {
@@ -142,7 +144,8 @@ export default function Profile() {
             }}
           >
             <Avatar
-              {...stringAvatar(user.name?.toUpperCase())}
+              icon={<PersonIcon />}
+              //{...stringAvatar(user.name?.toUpperCase())}
               sx={{ width: '55px', height: '55px' }}
             />
             <Box>

@@ -260,7 +260,7 @@ export default function Pay({ pending, failed, success }) {
 
         <CardContent sx={{ p: 0 }}>
           {statusContent ? (
-            <Box sx={StatusContainer({ theme, status: statusContent.status })}>
+            <StatusContainer status={statusContent.status} sx={{ m: 3 }}>
               {statusContent.icon}
               <Typography variant="h4" fontWeight="bold" gutterBottom>
                 {statusContent.title}
@@ -268,7 +268,7 @@ export default function Pay({ pending, failed, success }) {
               <Typography variant="h6" sx={{ opacity: 0.9 }}>
                 {statusContent.message}
               </Typography>
-            </Box>
+            </StatusContainer>
           ) : (
             <Box sx={{ p: 3 }}>
               <Typography

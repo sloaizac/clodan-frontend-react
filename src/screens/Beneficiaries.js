@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
   Container,
@@ -95,7 +96,7 @@ export default function Beneficiaries() {
       // eslint-disable-next-line no-undef
       link: `${process.env.REACT_APP_PUBLIC_HOST}/registration/${session_data.user_id}`,
     };
-    send(config);
+    //send(config);
   };
 
   const sendEmailNotification = () => {
